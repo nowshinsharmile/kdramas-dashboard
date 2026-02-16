@@ -98,6 +98,23 @@ NEGATIVE_PHRASES = {
 # Regex helper: what counts as a "word character"
 WORD_CHAR = re.compile(r"\w")
 
+from collections import defaultdict
+
+def normalize_text(s: str) -> str:
+    """
+    Normalize text for matching/search:
+    - lowercase
+    - convert & to 'and'
+    - normalize hyphens to spaces
+    - remove punctuation
+    - collapse whitespace
+    """
+    s = (s or "").lower().strip()
+    s = s.replace("&", " and ")
+    s = s.replace("-", " ")
+    s = re.sub(r"[^\w\s]", " ", s)   # remove punctuation like ! ? ' :
+    s = re.sub(r"\s+", " ", s)
+    return s.strip()
 # =============================
 # 4) LOAD CANONICAL DRAMA TITLES
 # =============================
@@ -105,20 +122,23 @@ WORD_CHAR = re.compile(r"\w")
 # We load the official drama titles from your Excel list (Wikipedia extraction).
 print("Loading drama titles from Excel...")
 df_titles = pd.read_excel(WIKI_TITLES_XLSX)
-# Keep original title for acronym generation
+# Keep original title for acronym generation + pretty display
 df_titles["title_original"] = df_titles["title"].astype(str)
+print()
+# Normalized title for matching (punctuation-insensitive)
+df_titles["title_normalized"] = df_titles["title_original"].apply(normalize_text)
 
-# Clean titles: lowercase, trim, and normalize spaces
-df_titles["title_clean"] = (
-    df_titles["title"]
-    .astype(str)
-    .str.lower()
-    .str.strip()
-    .str.replace(r"\s+", " ", regex=True)
+canonical_titles = df_titles["title_normalized"].dropna().unique().tolist()
+canonical_set = set(canonical_titles)
+
+# Map normalized -> original (for final Excel display)
+normalized_to_original = (
+    df_titles.dropna(subset=["title_normalized", "title_original"])
+    .drop_duplicates("title_normalized")
+    .set_index("title_normalized")["title_original"]
+    .to_dict()
 )
 
-canonical_titles = df_titles["title_clean"].dropna().unique().tolist()
-canonical_set = set(canonical_titles)
 print(f"Loaded {len(canonical_titles)} canonical titles.")
 
 # =============================
@@ -146,54 +166,52 @@ ambiguous_auto = {t for t in canonical_titles if len(t.split()) == 1}
 print(f"Detected {len(ambiguous_auto)} auto-ambiguous titles (single-word).")
 
 
-
-
-
 # Manual aliases (safe-ish ones)
 #These are the shorthand people *really* use.
 MANUAL_ALIASES_RAW = {
-    "2521": "twenty-five twenty-one",
-    "25/21": "twenty-five twenty-one",
-    "25-21": "twenty-five twenty-one",
-    "wlfkbj": "weightlifting fairy kim bok-joo",
-    "wlf": "weightlifting fairy kim bok-joo",
+    "2521": "twenty five twenty one",
+    "25/21": "twenty five twenty one",
+    "25-21": "twenty five twenty one",
+    "wlfkbj": "weightlifting fairy kim bok joo",
+    "wlf": "weightlifting fairy kim bok joo",
     "sh**ting stars": "shooting stars",
-    "swag": "weightlifting fairy kim bok-joo",
-    "kim bok joo": "weightlifting fairy kim bok-joo",
-    "kbj": "weightlifting fairy kim bok-joo",
-    "weight lifting": "weightlifting fairy kim bok-joo",
-    "weightlifting fairy": "weightlifting fairy kim bok-joo",
+    "shooting star": "shooting stars",
+    "swag": "weightlifting fairy kim bok joo",
+    "kim bok joo": "weightlifting fairy kim bok joo",
+    "kbj": "weightlifting fairy kim bok joo",
+    "weight lifting": "weightlifting fairy kim bok joo",
+    "weightlifting fairy": "weightlifting fairy kim bok joo",
     "W: Two Worlds": "w",
     "W: Two Worlds Apart": "w",
-    "hometown ccc":"hometown cha-cha-cha",
-    "hometown cha cha cha":"hometown cha-cha-cha",
-    "hometown chachacha":"hometown cha-cha-cha",
+    "hometown ccc":"hometown cha cha cha",
+    "hometown cha cha cha":"hometown cha cha cha",
+    "hometown chachacha":"hometown cha cha cha",
     "in your brilliant season": "in your radiant season",
     "goblin": "guardian: the lonely and great god",
     "bride of habaek":"the bride of habaek",
-    "rookie historian": "rookie historian goo hae-ryung",
+    "rookie historian": "rookie historian goo hae ryung",
     "jealousy incarnate": "don't dare to dream",
     "School 2015": "who are you: school 2015",
-    "Strong girl do bong soon": "strong girl bong-soon",
-    "Strong woman do bong soon": "strong girl bong-soon",
-    "minmin": "strong girl bong-soon",
-    "bongbong": "strong girl bong-soon",
-    "ahn min-hyuk": "strong girl bong-soon",
-    "swdbs": "strong girl bong-soon",
-    "jealousy incarnate": "don't dare to dream",
+    "Strong girl do bong soon": "strong girl bong soon",
+    "Strong woman do bong soon": "strong girl bong soon",
+    "minmin": "strong girl bong soon",
+    "bongbong": "strong girl bong soon",
+    "ahn min-hyuk": "strong girl bong soon",
+    "swdbs": "strong girl bong soon",
     "idol i": "i dol i",
     "moon lovers": "moon lovers: scarlet heart ryeo",
     "scarlet heart": "moon lovers: scarlet heart ryeo",
-    "bon appetit your majesty": "bon appétit, your majesty",
-    "bon apetit your majesty": "bon appétit, your majesty",
-    "it's ok to not be ok": "it's okay to not be okay",
-    "its ok to not be ok": "it's okay to not be okay",
-    "its ok to not ok": "it's okay to not be okay",
-    "iotnbo": "it's okay to not be okay",
+    "bon appetit your majesty": "bon appétit your majesty",
+    "bon apetit your majesty": "bon appétit your majesty",
+    "it's ok to not be ok": "it s okay to not be okay",
+    "its ok to not be ok": "it s okay to not be okay",
+    "its ok to not ok": "it s okay to not be okay",
+    "iotnbo": "it s okay to not be okay",
     "doctors": "the doctors",
     "k2": "the k2",
-    "doona":"doona!",
-    "can this love be translated": "can this love be translated?"
+    "dali and the cocky prince":"dali and cocky prince",
+    "jeongnyeon":"jeongnyeon  the star is born",
+    "search www": "search: www"
 
 }
 
@@ -203,13 +221,6 @@ MANUAL_ALIASES_RAW = {
 
 print("Building alias map...")
 
-from collections import defaultdict
-
-def normalize_text(s: str) -> str:
-    """Make text consistent."""
-    s = (s or "").lower().strip()
-    s = re.sub(r"\s+", " ", s)
-    return s
 
 def normalize_title_variant(s: str) -> str:
     """Normalize hyphens to spaces (bok-joo vs bok joo)."""
@@ -255,7 +266,8 @@ for t in canonical_titles:
 # 7b) Auto acronyms (generate from ORIGINAL title, map to CLEAN title)
 for _, row in df_titles.iterrows():
     original_title = row["title_original"]
-    clean_title = row["title_clean"]
+    clean_title = row["title_normalized"]
+
 
     ac = make_acronym(original_title)
 
@@ -269,7 +281,7 @@ for alias, canon in MANUAL_ALIASES_RAW.items():
     alias_sources[alias_norm].append(canon_resolved)
 
 # 7d) Remove blacklist aliases
-BLACKLIST_ALIASES = {"days", "end", "way", "omg","for","has","low","mom"}
+BLACKLIST_ALIASES = {"days", "end", "way", "omg","for","has","low","mom","hit"}
 
 for bad in BLACKLIST_ALIASES:
     if bad in alias_sources:
@@ -597,8 +609,13 @@ process_comments(COMMENTS_PATH)
 # =============================
 print("\nBuilding output tables...")
 
-rows = [{"title": t, "week": w, "mentions": c} for (t, w), c in weekly_counts.items()]
+rows = [{
+    "title": normalized_to_original.get(t, t),  # show original title in Excel
+    "week": w,
+    "mentions": c
+} for (t, w), c in weekly_counts.items()]
 df_long = pd.DataFrame(rows)
+
 
 if df_long.empty:
     print("No matches found. Check your titles file and alias list.")
@@ -628,9 +645,10 @@ df_rank = (
 print("Building monthly tables...")
 
 monthly_rows = [
-    {"title": t, "month": m, "mentions": c}
+    {"title": normalized_to_original.get(t, t), "month": m, "mentions": c}
     for (t, m), c in monthly_counts.items()
 ]
+
 
 df_month_long = pd.DataFrame(monthly_rows)
 
