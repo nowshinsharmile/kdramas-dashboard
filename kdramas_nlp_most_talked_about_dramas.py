@@ -47,7 +47,7 @@ POSTS_PATH = r"C:\Users\nowsh\Downloads\Spring 2026\r_kdramas_posts.jsonl"
 COMMENTS_PATH = r"C:\Users\nowsh\Downloads\Spring 2026\r_kdramas_comments.jsonl"
 
 #kdrama titles downloaded from wikipedia and deleted unnecessary lines or words manually
-WIKI_TITLES_XLSX = r"korean_dramas_wikipedia.xlsx"
+WIKI_TITLES_XLSX = r"C:\Users\nowsh\Documents\kdramas-dashboard\korean_dramas_wikipedia.xlsx"
 
 # This is what we will create at the end.
 OUTPUT_FILE = r"C:\Users\nowsh\Documents\kdramas-dashboard\STRICT_weekly_kdrama_mentions_test.xlsx"
@@ -178,9 +178,11 @@ MANUAL_ALIASES_RAW = {
     "shooting star": "shooting stars",
     "swag": "weightlifting fairy kim bok joo",
     "kim bok joo": "weightlifting fairy kim bok joo",
+    "bok joo": "weightlifting fairy kim bok joo",
     "kbj": "weightlifting fairy kim bok joo",
     "weight lifting": "weightlifting fairy kim bok joo",
     "weightlifting fairy": "weightlifting fairy kim bok joo",
+    "jung joon hyung": "weightlifting fairy kim bok joo",
     "W: Two Worlds": "w",
     "W: Two Worlds Apart": "w",
     "hometown ccc":"hometown cha cha cha",
@@ -196,7 +198,6 @@ MANUAL_ALIASES_RAW = {
     "Strong woman do bong soon": "strong girl bong soon",
     "minmin": "strong girl bong soon",
     "bongbong": "strong girl bong soon",
-    "ahn min-hyuk": "strong girl bong soon",
     "swdbs": "strong girl bong soon",
     "idol i": "i dol i",
     "moon lovers": "moon lovers: scarlet heart ryeo",
@@ -212,7 +213,11 @@ MANUAL_ALIASES_RAW = {
     "dali and the cocky prince":"dali and cocky prince",
     "jeongnyeon":"jeongnyeon  the star is born",
     "search www": "search: www",
-    "dp": "d p "
+    "dp": "d p ",
+    "world of married":"the world of the married",
+    "world of the married":"the world of the married",
+    "tale of nine tailed":"tale of the nine tailed",
+    "romantic anonymous":"romantics anonymous"
 
 }
 
@@ -282,7 +287,7 @@ for alias, canon in MANUAL_ALIASES_RAW.items():
     alias_sources[alias_norm].append(canon_resolved)
 
 # 7d) Remove blacklist aliases
-BLACKLIST_ALIASES = {"days", "end", "way", "omg","for","has","low","mom","hit"}
+BLACKLIST_ALIASES = {"days", "end", "way", "omg","for","has","low","mom","hit", "hae"}
 
 for bad in BLACKLIST_ALIASES:
     if bad in alias_sources:
