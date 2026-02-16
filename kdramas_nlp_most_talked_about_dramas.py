@@ -184,7 +184,8 @@ MANUAL_ALIASES_RAW = {
     "idol i": "i dol i",
     "moon lovers": "moon lovers: scarlet heart ryeo",
     "scarlet heart": "moon lovers: scarlet heart ryeo",
-    "bon appetit your majesty": "bon appétit, your majesty"
+    "bon appetit your majesty": "bon appétit, your majesty",
+    "it's ok to not be ok": "it's okay to not be okay"
 }
 
 # =============================
