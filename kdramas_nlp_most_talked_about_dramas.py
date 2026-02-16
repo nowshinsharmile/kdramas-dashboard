@@ -386,6 +386,8 @@ def strict_filter(text: str, canonical: str, start: int, end: int) -> bool:
         return True
     if canonical == "vagabond":
         return True
+    if canonical == "moving":
+        return True
     # --------------------------------------------------
     # ORIGINAL LOGIC CONTINUES UNCHANGED
     # --------------------------------------------------
