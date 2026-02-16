@@ -432,6 +432,8 @@ def strict_filter(text: str, canonical: str, start: int, end: int) -> bool:
         return True
     if canonical == "twelve":
         return True
+    if canonical == "healer":
+        return True
     # --------------------------------------------------
     # ORIGINAL LOGIC CONTINUES UNCHANGED
     # --------------------------------------------------
