@@ -259,7 +259,7 @@ for alias, canon in MANUAL_ALIASES_RAW.items():
     alias_sources[alias_norm].append(canon_resolved)
 
 # 7d) Remove blacklist aliases
-BLACKLIST_ALIASES = {"days", "end", "way", "omg","for","has","low"}
+BLACKLIST_ALIASES = {"days", "end", "way", "omg","for","has","low","mom"}
 
 for bad in BLACKLIST_ALIASES:
     if bad in alias_sources:
@@ -479,7 +479,7 @@ def extract_matches(text: str) -> set[str]:
 from datetime import datetime, UTC
 
 def iso_week_key(ts: int) -> str:
-    """Baby: convert timestamp to ISO week string like 2024-W07."""
+    """Convert timestamp to ISO week string like 2024-W07."""
     dt = datetime.fromtimestamp(ts, UTC)
     year, week, _ = dt.isocalendar()
     return f"{year}-W{week:02d}"
