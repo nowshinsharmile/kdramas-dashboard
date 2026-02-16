@@ -187,7 +187,12 @@ MANUAL_ALIASES_RAW = {
     "bon appetit your majesty": "bon appétit, your majesty",
     "bon apetit your majesty": "bon appétit, your majesty",
     "it's ok to not be ok": "it's okay to not be okay",
-    "its ok to not be ok": "it's okay to not be okay"
+    "its ok to not be ok": "it's okay to not be okay",
+    "its ok to not ok": "it's okay to not be okay",
+    "iotnbo": "it's okay to not be okay",
+    "doctors": "the doctors",
+    "k2": "the k2",
+    "doona":"doona!"
 }
 
 # =============================
@@ -402,6 +407,16 @@ def strict_filter(text: str, canonical: str, start: int, end: int) -> bool:
     if canonical == "vagabond":
         return True
     if canonical == "moving":
+        return True
+    if canonical == "anna":
+        return True
+    if canonical == "doona":
+        return True
+    if canonical == "pasta":
+        return True
+    if canonical == "signal":
+        return True
+    if canonical == "twelve":
         return True
     # --------------------------------------------------
     # ORIGINAL LOGIC CONTINUES UNCHANGED
