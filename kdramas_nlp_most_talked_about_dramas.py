@@ -379,7 +379,12 @@ def strict_filter(text: str, canonical: str, start: int, end: int) -> bool:
         return True
     if canonical == "abyss":
         return True
-
+    if canonical == "vincenzo":
+        return True
+    if canonical == "vigilante":
+        return True
+    if canonical == "vagabond":
+        return True
     # --------------------------------------------------
     # ORIGINAL LOGIC CONTINUES UNCHANGED
     # --------------------------------------------------
@@ -493,7 +498,6 @@ def iso_month_key(ts: int) -> str:
     """
     dt = datetime.fromtimestamp(ts, UTC)
     return f"{dt.year}-{dt.month:02d}"
-
 
 # =============================
 # 13) PROCESS POSTS THEN COMMENTS (STREAMING)
@@ -630,7 +634,6 @@ with pd.ExcelWriter(OUTPUT_FILE, engine="openpyxl") as writer:
 print("\n" + "="*60)
 print("✅ PIPELINE COMPLETE")
 print("="*60)
-
 print(f"📁 Saved Excel File: {OUTPUT_FILE}")
 
 # Basic dataset stats
@@ -655,5 +658,4 @@ print(f"Unique dramas mentioned (monthly): {len(df_month_rank)}")
 # Top 5 sanity check
 print("\n--- TOP 5 DRAMAS (WEEKLY TOTAL) ---")
 print(df_rank.head(30).to_string(index=False))
-
 print("\n All done successfully.")
