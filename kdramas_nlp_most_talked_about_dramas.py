@@ -192,7 +192,9 @@ MANUAL_ALIASES_RAW = {
     "iotnbo": "it's okay to not be okay",
     "doctors": "the doctors",
     "k2": "the k2",
-    "doona":"doona!"
+    "doona":"doona!",
+    "can this love be translated": "can this love be translated?"
+
 }
 
 # =============================
