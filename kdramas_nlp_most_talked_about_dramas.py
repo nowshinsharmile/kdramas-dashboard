@@ -50,7 +50,7 @@ COMMENTS_PATH = r"C:\Users\nowsh\Downloads\Spring 2026\r_kdramas_comments.jsonl"
 WIKI_TITLES_XLSX = r"korean_dramas_wikipedia.xlsx"
 
 # This is what we will create at the end.
-OUTPUT_FILE = "STRICT_weekly_kdrama_mentions_test.xlsx"
+OUTPUT_FILE = r"C:\Users\nowsh\Documents\kdramas-dashboard\STRICT_weekly_kdrama_mentions_test.xlsx"
 
 
 # =============================
@@ -185,7 +185,9 @@ MANUAL_ALIASES_RAW = {
     "moon lovers": "moon lovers: scarlet heart ryeo",
     "scarlet heart": "moon lovers: scarlet heart ryeo",
     "bon appetit your majesty": "bon appétit, your majesty",
-    "it's ok to not be ok": "it's okay to not be okay"
+    "bon apetit your majesty": "bon appétit, your majesty",
+    "it's ok to not be ok": "it's okay to not be okay",
+    "its ok to not be ok": "it's okay to not be okay"
 }
 
 # =============================
@@ -366,11 +368,22 @@ def strict_filter(text: str, canonical: str, start: int, end: int) -> bool:
             "two worlds",
             "lee jong suk",
             "han hyo joo",
+            "hhj",
+            "2016",
+            "mbc"
         ]
         if not any(sig in text for sig in strong_w_signals):
             return False
         return True
-
+    if canonical == "tomorrow":
+        strong_tomorrow_signals = [
+            "rowoon",
+            "mbc",
+            "2022"
+        ]
+        if not any(sig in text for sig in strong_tomorrow_signals):
+            return False
+        return True
 
     # Special handling for Happiness
     if canonical == "happiness":
@@ -379,6 +392,8 @@ def strict_filter(text: str, canonical: str, start: int, end: int) -> bool:
          #   return False
         return True
     if canonical == "abyss":
+        return True
+    if canonical == "mouse":
         return True
     if canonical == "vincenzo":
         return True
