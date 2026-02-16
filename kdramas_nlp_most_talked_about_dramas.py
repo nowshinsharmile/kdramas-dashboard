@@ -211,7 +211,8 @@ MANUAL_ALIASES_RAW = {
     "k2": "the k2",
     "dali and the cocky prince":"dali and cocky prince",
     "jeongnyeon":"jeongnyeon  the star is born",
-    "search www": "search: www"
+    "search www": "search: www",
+    "dp": "d p "
 
 }
 
@@ -433,6 +434,10 @@ def strict_filter(text: str, canonical: str, start: int, end: int) -> bool:
     if canonical == "twelve":
         return True
     if canonical == "healer":
+        return True
+    if canonical == "snowdrop":
+        return True
+    if canonical == "nevertheless":
         return True
     # --------------------------------------------------
     # ORIGINAL LOGIC CONTINUES UNCHANGED

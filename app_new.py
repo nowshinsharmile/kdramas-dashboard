@@ -112,13 +112,33 @@ def load_data():
 
 weekly_long, weekly_rank, monthly_long, wiki_df = load_data()
 
+weekly_long, weekly_rank, monthly_long, wiki_df = load_data()
+
+# ------------------------------------------------------------
+# CLEAN ranking titles BEFORE merge
+# ------------------------------------------------------------
+weekly_rank["title_clean"] = (
+    weekly_rank["title"]
+    .astype(str)
+    .str.lower()
+    .str.strip()
+)
+
+# ------------------------------------------------------------
 # Merge release year into ranking
+# ------------------------------------------------------------
 rank_with_year = weekly_rank.merge(
     wiki_df[["title_clean", "start_year"]],
-    left_on="title",
-    right_on="title_clean",
+    on="title_clean",
     how="left"
-).drop(columns=["title_clean"])
+)
+
+# Clean year type
+rank_with_year["start_year"] = rank_with_year["start_year"].astype("Int64")
+
+# Optional: remove helper column
+rank_with_year = rank_with_year.drop(columns=["title_clean"])
+
 
 
 # ============================================================
